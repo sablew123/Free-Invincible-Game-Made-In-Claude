@@ -70,7 +70,7 @@ canvas{position:fixed;left:0;top:0;transform-origin:50% 62%}
 <div class="dirs"><div class="side"><small>◀ Izquierda</small><b id="gLn"></b><span id="gLd"></span><em id="gLt"></em></div><div class="side"><small>Derecha ▶</small><b id="gRn"></b><span id="gRd"></span><em id="gRt"></em></div></div></div>
 <div class="view" id="vYt"><div class="yh"><b>▶</b> YouTube</div><div class="yp"><iframe id="ytF" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><div class="ye" id="ytE">Pega un link de YouTube<br>(video o lista) y dale ▶</div></div><div class="yr"><input id="ytIn" placeholder="link de YouTube…" autocomplete="off" spellcheck="false"><button id="ytGo" title="Reproducir">▶</button><button id="ytSe" title="Buscar en YouTube">🔎</button></div><div class="yl" id="ytL"></div><div class="yn" id="ytN"></div></div>
 <div class="view" id="vAstros"><div class="vt">MisAstros</div><div class="abox"><small>🌙 Distancia a la Luna</small><big id="aDist"></big></div><div class="abox"><small>Dirección de la Luna</small><div class="aring"><span id="aAr">➤</span></div><small id="aTxt"></small></div></div>
-<div class="view" id="vClock"><div class="vt">Reloj</div><div class="abox"><small>Hora en tu bioma</small><big id="rNow"></big><small id="rZone"></small></div><div class="rl" id="rList"></div></div>
+<div class="view" id="vClock"><div class="vt">Reloj</div><div class="abox"><small>Hora en tu bioma</small><big id="rNow"></big><small id="rZone"></small><small id="rDay"></small></div><div class="rl" id="rList"></div></div>
 </div><div class="home" id="phome"></div></div>
 <div id="pcb"><div class="bar"><i id="pcf"></i></div><span id="pcl"></span></div><div id="pf"></div><div id="aimh"></div><div id="cmh">✈ MODO CRUCERO · Q = desactivar</div><canvas id="bodyhud"></canvas><div id="ko"></div>
 <div id="kb"><div id="kbn"></div><div class="bar"><i id="kbf"></i></div><div id="kbt"></div></div>
@@ -248,7 +248,7 @@ let lastJ=-9;const J0=15*M,JTAU=1.2,JMAX=2500*M; // aceleración extra: 15 m/s²
 const PU={chg:-1,pz:0,t:0,f:0,ft:0,dir:0,pd:0,hit:1},isN=e=>e.key==='ñ'||e.key==='Ñ'||e.code==='Semicolon',fmtN=f=>Math.round(f).toLocaleString('en-US')+' N';
 const pcb=document.getElementById('pcb'),pcf=document.getElementById('pcf'),pcl=document.getElementById('pcl'),pfe=document.getElementById('pf');
 // 500,000 N base → 1,000,000 N con 3 s de carga · x1 hasta 100 m/s, luego sube hasta x200 a Mach 25 (200 millones N); más allá (espacio, hasta Mach 100) sigue creciendo
-const punchF=(c,v)=>5e5*(1+Math.min(3,c)/3)*(v<100?1:1+199*Math.pow((v-100)/(25*343-100),1.3))*(1-.65*DG.F); // el daño acumulado le quita hasta 65 % de fuerza
+const punchF=(c,v)=>5e5*(1+Math.min(3,c)/3)*(v<100?1:1+199*Math.pow((v-100)/(25*343-100),1.3))*(1-.65*DG.F)*(1+TR.p); // el daño acumulado le quita hasta 65 % de fuerza · entrenado: hasta el doble
 function punch(c){const v=Math.hypot(P.vx,P.vy)/M,a=airK(Math.max(0,-P.y/M));PU.f=punchF(c,v);PU.t=.22;AIM.chk=aimLocked();PU.ft=3;PU.chg=-1;PU.hit=0;
   P.shake=Math.max(P.shake,Math.min(12,2+Math.log10(PU.f/5e5+1)*4));if(AC&&AC.state==='running'){if(!AW)initAW();burst(.15,'bandpass',1200,Math.min(.35,.05+PU.f/2e8)*a)}}
 function punchStep(dt){const{ix,iy}=axis();if(ix||iy)PU.dir=Math.atan2(iy,ix);if(aimLocked())PU.dir=aimDir(); // el golpe va hacia la última dirección apuntada con WASD
@@ -296,7 +296,7 @@ function aimDraw(){if(!aimLocked())return;const K=AIM.K,[cx,cy]=aimCen(K),[x,y]=
 // ---------- DAÑO DE INVINCIBLE: silueta tipo hombre de Vitruvio (tecla 0 alterna con la cajita de info) ----------
 // morado = moretones (muy frecuentes, se acumulan, sanan rápido) · marrón rojizo = quemaduras · rojo puro = heridas abiertas (cortes; sanan lento)
 const HOLD_Z=.3; // zoom de cámara cuando un sarcillo de Ave María atrapa a Invincible (Shift = 1, vista normal)
-const DEF=.78; // resistencia física de Invincible: recibe el 78% del daño (≈ aguanta 28% más)
+let DEF=.78; // resistencia física de Invincible: recibe el 78% del daño (≈ aguanta 28% más)
 const KO_SECS=12,KOS={spd:1,acc:0},KO_AT=.5,KO_WAKE=.1,HEAL_P=.004,HEAL_B=.0025,HEAL_W=.0003; // por segundo de juego
 // ---- PRESS DE BANCA (anexo del Pentágono) ----
 const BN_TON=400,BN_CMIN=.08,BN_TAP=.07,BN_CDEC=.05,BN_CLIFT=.04,BN_STEP=50,BN_STREAK=3; // 3 repeticiones perfectas seguidas → +50 t
@@ -314,11 +314,11 @@ function bnStep(dt){const B=BN;B.m+=((B.on?1:0)-B.m)*(1-Math.exp(-8*dt));B.vu=bn
     B.c=Math.max(0,B.c-(BN_CDEC+(lift?BN_CLIFT*lf:0))*dt);
     if(B.ph===0){if(B.h>.06){B.ph=1;B.tu=0;B.mx=0}}
     else if(B.ph===1){B.tu+=dt;B.mx=Math.max(B.mx,B.h);
-      if(B.h<=.04){B.ph=0;if(B.mx>.2){B.fail++;B.str=0;bsMsg('✖ repetición fallida: no llegaste arriba')}} // se quedó atascado y la barra volvió a bajar
+      if(B.h<=.04){B.ph=0;if(B.mx>.2){B.fail++;B.str=0;trFail();bsMsg('✖ repetición fallida: no llegaste arriba')}} // se quedó atascado y la barra volvió a bajar
       else if(B.h>=.985){B.ph=2;B.td=0}}
-    else{if(B.h>=.985)B.td=0;else B.td+=dt;if(B.h<=.04){const r=Math.min(B.tu,B.td)/Math.max(B.tu,B.td,.01);B.reps++;B.ph=0; // repetición perfecta: subió y bajó a la misma velocidad
-      if(r>=.8){B.perf++;B.str++;if(B.str>=BN_STREAK){B.str=0;B.lv++;B.ton=BN_TON+BN_STEP*B.lv;P.flash=Math.max(P.flash,.25);P.shake=Math.max(P.shake,10);bsMsg('⬆ ¡CARGA SUBE A '+B.ton+' t!')}else bsMsg('✓ perfecta · racha '+B.str+'/'+BN_STREAK)}
-      else{B.str=0;bsMsg('repetición floja: sube y baja al mismo ritmo')}}}
+    else{if(B.h>=.985)B.td=0;else B.td+=dt;if(B.h<=.04){const r=Math.min(B.tu,B.td)/Math.max(B.tu,B.td,.01);B.reps++;B.ph=0;const ts=trRep(r>=.8?1:.5); // repetición perfecta: subió y bajó a la misma velocidad
+      if(r>=.8){B.perf++;B.str++;if(B.str>=BN_STREAK){B.str=0;B.lv++;B.ton=BN_TON+BN_STEP*B.lv;P.flash=Math.max(P.flash,.25);P.shake=Math.max(P.shake,10);bsMsg('⬆ ¡CARGA SUBE A '+B.ton+' t!'+ts)}else bsMsg('✓ perfecta · racha '+B.str+'/'+BN_STREAK+ts)}
+      else{B.str=0;bsMsg('repetición floja: sube y baja al mismo ritmo'+ts)}}}
     if(B.h>=.985){if(!B.top){B.top=true;B.gl=1;B.sp=.9}}else if(B.h<.9)B.top=false;
     if(B.top){B.sp-=dt;if(B.sp<=0){B.sp=.9;B.gl=Math.max(B.gl,.85)}}
     if(h0>.25&&B.h<=0&&B.vd>.6){P.shake=Math.max(P.shake,12);thump(35)}} // la máquina cae de golpe
@@ -328,11 +328,11 @@ function bnKey(e){if(e.code==='KeyJ'){const B=BN;B.c=Math.min(1,B.c+BN_TAP*(B.h<
   else if(e.code==='KeyS'||e.code==='ArrowDown')PN.dismount()}
 function bnText(){const B=BN,pc=x=>Math.round(x*100)+'%',bar=x=>{const n=Math.round(clamp(x,0,1)*10);return '█'.repeat(n)+'░'.repeat(10-n)},
   t=B.live>=.85?'✓ RITMO ÓPTIMO':B.vu>B.vd?'subes más rápido de lo que bajas':'bajas más rápido de lo que subes',st=B.stk<.8?'\n⚠ PUNTO DE ATASCO: falta pecho':'';
-  return `PRESS DE BANCA · ${B.ton} t (nivel ${B.lv+1})\npecho  ${bar(B.c)} ${pc(B.c)}\nbrazos ${bar(B.a)} ${pc(B.a)}\nbarra  ${bar(B.h)} ${pc(B.h)}${B.c<bnCMIN()?'\n⚠ sin pecho: los brazos no responden':''}${st}\nsubida ${pc(B.vu)}/s · bajada ${pc(B.vd)}/s\n${t}\nreps ${B.reps} · perfectas ${B.perf} · fallos ${B.fail}\nracha ${B.str}/${BN_STREAK} → sube la carga\nJ = pecho (toques, Ñ suelta): carga y frena la bajada · Ñ = empujar (mantener) · S = bajar\n⚠ J y Ñ no se pueden a la vez`}
+  return `PRESS DE BANCA · ${B.ton} t (nivel ${B.lv+1})\npecho  ${bar(B.c)} ${pc(B.c)}\nbrazos ${bar(B.a)} ${pc(B.a)}\nbarra  ${bar(B.h)} ${pc(B.h)}${B.c<bnCMIN()?'\n⚠ sin pecho: los brazos no responden':''}${st}\nsubida ${pc(B.vu)}/s · bajada ${pc(B.vd)}/s\n${t}\nreps ${B.reps} · perfectas ${B.perf} · fallos ${B.fail}\nracha ${B.str}/${BN_STREAK} → sube la carga\n💪 entrenado ${(TR.p*100).toFixed(1)}% · cupo hoy ${Math.round(TR.dg/TR_DAYCAP*100)}%\nfatiga ${bar(TR.ft)} ${pc(TR.ft)}${TR.ft>=TR_OVER?' ⚠ DESCANSA':''}${trHurt()||trInj()?'\n🩹 herido: no hay progreso':''}\nJ = pecho (toques, Ñ suelta): carga y frena la bajada · Ñ = empujar (mantener) · S = bajar\n⚠ J y Ñ no se pueden a la vez`}
 // ---- ENEMIGOS ODIADORES ----
 const HATE_P=.25,KOH_MAX=2,KOH={on:false,xs:0}; // 25 % de los kaijus odian a Invincible (Ave María siempre) · KOH = KO con un odiador cerca: el tiempo NO se acelera y el daño sigue subiendo hasta 200 %
 function hateFoe(){if(MN.on||PN.on)return null;let b=null,bd=1e18;for(const K of KJ){if(!K.hate||K.gd||K.st==='dead'||K.st==='leave'||K.st==='gone')continue;const d=Math.hypot(K.wx-P.x,P.y-(K.fy-K.S*.5));if(d<KCAM&&d<bd){bd=d;b=K}}return b}
-function koHit(v){if(!KOH.on)return;const f=hateFoe();KOH.xs+=v*(f&&f.ty==='beast'?.45:1);DG.fl=1} // golpes sobre el inconsciente
+function koHit(v){if(!KOH.on)return;const f=hateFoe();KOH.xs+=v*(f&&f.ty==='beast'?.45:1)*(1-.5*TR.p);DG.fl=1} // golpes sobre el inconsciente
 function koRescue(){let am=false,gd=false;
   for(const K of KJ)if(K.gr)bsRelease(K,0);
   for(let i=KJ.length-1;i>=0;i--){const K=KJ[i];if(!K.hate||K.gd||K.st==='dead'||K.st==='leave'||K.st==='gone')continue;
@@ -346,7 +346,32 @@ const BP=[{c:[50,12],r:9,w:.10},{a:[50,26],b:[50,60],t:22,w:.30},
   {a:[45,62],b:[35,88],t:12,w:.10},{a:[35,88],b:[27,114],t:9,w:.09},{a:[55,62],b:[65,88],t:12,w:.10},{a:[65,88],b:[73,114],t:9,w:.09}]; // cabeza, torso, brazo/antebrazo I, D, muslo/pantorrilla I, D
 const BW=(()=>{const t=BP.reduce((a,b)=>a+b.w,0);return BP.map(b=>b.w/t)})();
 const DG={p:new Float32Array(10),b:new Float32Array(10),wo:[],D:0,F:0,aP:0,aB:0,fl:0};
-let sil=null,DGT=0;
+let sil=null,DGT=0,silK=-1,WELCOME='';
+// ---------- ENTRENAMIENTO (press de banca) ----------
+// p = progreso de entrenamiento 0→1 (0 % → 100 %). Escala: velocidad máx. ×(1+p) en atmósfera y en el vacío · golpes ×(1+p) · daño recibido ×(1−.5p) · silueta: brazos más gruesos y pecho que crece más que el abdomen.
+// Es LENTO a propósito: cada repetición da un poquito y gasta fatiga; la fatiga se recupera en tiempo REAL; pasarse de repeticiones castiga con moretones; herido (o herido hace <5 min reales) no hay progreso; y hay un cupo diario.
+const TR={p:0,ft:0,hurt:0,dg:0,sets:0,sr:0,gap:0,tn:Date.now()};
+const TR_G=.0047,    // progreso por repetición perfecta con el cuerpo descansado (≈ 30 series grandes bien descansadas para llegar a 100 %)
+  TR_FT=.05,         // fatiga por repetición
+  TR_REC=240,        // segundos reales para recuperar toda la fatiga
+  TR_OVER=.8,        // a partir de esta fatiga, cada repetición se castiga
+  TR_SETGAP=25,      // segundos sin repetir = la serie terminó
+  TR_DAYCAP=5/30,    // progreso máximo por día de juego (≈ 5 series grandes)
+  TR_HURT=300000;    // ms reales: herido hace menos de esto = no progresa
+let DAYC=1;          // contador de días de juego (sube si vuelves ≥ 5 h después)
+const BPT=BP.map(b=>b.t),trHurt=()=>Date.now()-TR.hurt<TR_HURT,trInj=()=>DG.D>.02||DG.aP>.03||DG.aB>.01||DG.wo.length>0;
+function trShape(){const p=TR.p;for(let i=0;i<BP.length;i++){const b=BP[i];if(!b.t)continue;b.t=BPT[i]*(i===1?1+.1*p:(i>=2&&i<=5)?1+.7*p:1)}} // brazos más gruesos, abdomen casi igual
+function trChest(g,col){if(TR.p<.002)return;g.fillStyle=col;g.beginPath();g.ellipse(50,36,11+13*TR.p,10+3*TR.p,0,0,7);g.fill()} // el pecho crece mucho más que el abdomen
+function trStep(dt){const n=Date.now(),d=Math.min(5,Math.max(0,(n-TR.tn)/1000));TR.tn=n;TR.ft=Math.max(0,TR.ft-d/TR_REC);DEF=.78*(1-.5*TR.p);
+  if(TR.sr>0){TR.gap+=d;if(TR.gap>TR_SETGAP)trSetEnd()}}
+function trSetEnd(){if(TR.sr>=3)TR.sets++;TR.sr=0;TR.gap=0}
+function trFail(){TR.ft=Math.min(1,TR.ft+TR_FT*.5);TR.gap=0}
+function trPunish(){TR.hurt=Date.now();for(const i of[1,2,3,4,5])DG.p[i]=Math.min(1,DG.p[i]+.14);P.shake=Math.max(P.shake,14);P.flash=Math.max(P.flash,.15);thump(40);DG.fl=1}
+function trRep(q){TR.sr++;TR.gap=0;const f0=TR.ft;TR.ft=Math.min(1,f0+TR_FT); // devuelve un texto corto para el aviso de la repetición
+  if(f0>=TR_OVER){trPunish();return' · 💢 SOBREENTRENAMIENTO: la máquina te castiga'}
+  if(trHurt())return' · 🩹 herido hace poco: sin progreso';if(trInj())return' · 🩹 herido: sin progreso';
+  if(TR.dg>=TR_DAYCAP-1e-6)return' · 😴 cupo de hoy lleno: descansa';
+  const g=Math.min(TR_G*q*Math.pow(1-f0,1.2),TR_DAYCAP-TR.dg,1-TR.p);TR.p+=g;TR.dg+=g;return g>0?' · 💪 +'+(g*100).toFixed(2)+'%':''}
 const bh=document.getElementById('bodyhud'),bhc=bh.getContext('2d'),koE=document.getElementById('ko');
 // zona del cuerpo golpeada según de dónde viene el golpe respecto al eje cabeza-pies
 function dgRegion(sd){const ax=P.flying?P.aim:P.grounded?-Math.PI/2:P.ang-Math.PI/2,c=Math.cos(sd-ax),sn=Math.sin(sd-ax),r=Math.random(),sd2=sn>.15?2:sn<-.15?0:(Math.random()<.5?0:2);
@@ -362,8 +387,8 @@ function dgBigCut(i){const b=BP[i];let cx,cy;
   if(b.c){cx=b.c[0];cy=b.c[1]}else{const u=R(.25,.75);cx=b.a[0]+(b.b[0]-b.a[0])*u;cy=b.a[1]+(b.b[1]-b.a[1])*u}
   const a0=R(0,Math.PI);
   for(let q=0;q<5;q++){const sv=R(.09,.16)*DEF;DG.wo.push({i,x:cx+R(-3,3),y:cy+R(-3,3),a:a0+R(-.35,.35),L:R(10,17),s:sv,s0:sv,w:2.6})}}
-function dgBite(sx,sy){if(P.ko>0){koHit(.10);return}dgBigCut(dgRegion(Math.atan2(sy-(P.y-37),sx-P.x)));DG.fl=1}
-function dgHit(ty,sx,sy,mag){if(P.ko>0){koHit(ty==='bruise'?Math.max(mag*DEF,.22):ty==='burn'?Math.max(mag*DEF*1.5,.22):.03);return}const sd=Math.atan2(sy-(P.y-37),sx-P.x);
+function dgBite(sx,sy){TR.hurt=Date.now();if(P.ko>0){koHit(.10);return}dgBigCut(dgRegion(Math.atan2(sy-(P.y-37),sx-P.x)));DG.fl=1}
+function dgHit(ty,sx,sy,mag){TR.hurt=Date.now();if(P.ko>0){koHit(ty==='bruise'?Math.max(mag*DEF,.22):ty==='burn'?Math.max(mag*DEF*1.5,.22):.03);return}const sd=Math.atan2(sy-(P.y-37),sx-P.x);
   if(ty==='bruise'){const i=dgRegion(sd);DG.p[i]=Math.min(1,DG.p[i]+mag*DEF)}
   else if(ty==='burn'){const i=dgRegion(sd);DG.b[i]=Math.min(1,DG.b[i]+mag*DEF);if(i!==1)DG.b[1]=Math.min(1,DG.b[1]+mag*DEF*.4)}
   else if(ty==='cut'){const n=2+(Math.random()*3|0);for(let q=0;q<n;q++)dgCut(dgRegion(sd),R(.012,.03))}
@@ -391,17 +416,17 @@ function dgTest(heavy){if(heavy){DG.p.fill(.9);DG.b.fill(.9);for(let i=0;i<10;i+
   const ty=['bruise','burn','cut'][DGT++%3];dgHit(ty,P.x+R(-1,1)*500,P.y-37+R(-1,1)*500,.25)}
 function dgPart(g,b,col){g.fillStyle=g.strokeStyle=col;g.beginPath();if(b.c){g.arc(b.c[0],b.c[1],b.r,0,7);g.fill()}else{g.moveTo(b.a[0],b.a[1]);g.lineTo(b.b[0],b.b[1]);g.lineWidth=b.t;g.lineCap='round';g.stroke()}}
 function hudLines(){const out=[];for(const ln of hud.textContent.split('\n')){let cur='';for(const w of ln.split(' ')){if((cur+' '+w).trim().length>33&&cur){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}out.push(cur)}return out}
-function dgDraw(){hud.style.display='none';const HL=hudLines(),BHH=266+HL.length*12+14;
+function dgDraw(){hud.style.display='none';trShape();const HL=hudLines(),BHH=266+HL.length*12+14;
   const cw=Math.round(190*dpr),chh=Math.round(BHH*dpr);if(bh.width!==cw||bh.height!==chh){bh.width=cw;bh.height=Math.round(BHH*dpr);bh.style.width='190px';bh.style.height=BHH+'px';sil=null}
   bh.style.display='block';const g=bhc;g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,190,BHH);
-  if(!sil){sil=document.createElement('canvas');sil.width=Math.ceil(140*dpr);sil.height=Math.ceil(174*dpr);const sg=sil.getContext('2d');sg.setTransform(dpr*1.4,0,0,dpr*1.4,0,0);for(const b of BP)dgPart(sg,b,'#cfd3da')}
+  const sk=Math.round(TR.p*400);if(!sil||silK!==sk){silK=sk;sil=document.createElement('canvas');sil.width=Math.ceil(140*dpr);sil.height=Math.ceil(174*dpr);const sg=sil.getContext('2d');sg.setTransform(dpr*1.4,0,0,dpr*1.4,0,0);for(const b of BP)dgPart(sg,b,'#cfd3da');trChest(sg,'#cfd3da')}
   g.font='bold 12px monospace';g.textAlign='center';g.fillStyle=P.ko>0?'#ff7a6a':'#fff';g.fillText(P.ko>0?'INVINCIBLE · INCONSCIENTE':BN.on?'INVINCIBLE · ENTRENANDO':'INVINCIBLE',95,16);
   g.globalAlpha=.5;g.drawImage(sil,25,26,140,174);g.globalAlpha=1;
   g.save();g.translate(25,26);g.scale(1.4,1.4);
   for(let i=0;i<10;i++){const p=DG.p[i],b=DG.b[i];
-    if(p>.0005)dgPart(g,BP[i],`rgba(140,50,210,${Math.min(.95,.14+.8*Math.pow(p,.8))})`);
-    if(b>.0005)dgPart(g,BP[i],`rgba(120,45,18,${Math.min(.95,.16+.8*Math.pow(b,.8))})`)}
-  if(BN.m>.02){const pu=.88+.12*Math.sin(performance.now()/90);dgPart(g,BP[1],`rgba(255,214,40,${Math.min(.95,.95*BN.c*BN.m*pu)})`);for(const i of[2,3,4,5])dgPart(g,BP[i],`rgba(255,214,40,${Math.min(.95,.95*BN.a*BN.m*pu)})`)} // amarillo = donde mete fuerza
+    if(p>.0005){const c=`rgba(140,50,210,${Math.min(.95,.14+.8*Math.pow(p,.8))})`;dgPart(g,BP[i],c);if(i===1)trChest(g,c)}
+    if(b>.0005){const c=`rgba(120,45,18,${Math.min(.95,.16+.8*Math.pow(b,.8))})`;dgPart(g,BP[i],c);if(i===1)trChest(g,c)}}
+  if(BN.m>.02){const pu=.88+.12*Math.sin(performance.now()/90);{const cc=`rgba(255,214,40,${Math.min(.95,.95*BN.c*BN.m*pu)})`;dgPart(g,BP[1],cc);trChest(g,cc)}for(const i of[2,3,4,5])dgPart(g,BP[i],`rgba(255,214,40,${Math.min(.95,.95*BN.a*BN.m*pu)})`)} // amarillo = donde mete fuerza
   g.strokeStyle='#ff0000';g.lineCap='round';
   for(const q of DG.wo){g.lineWidth=q.w||1.4;const L=q.L*(.35+.65*q.s/q.s0)/2,c=Math.cos(q.a)*L,sn=Math.sin(q.a)*L;g.beginPath();g.moveTo(q.x-c,q.y-sn);g.lineTo(q.x+c,q.y+sn);g.stroke()}
   g.restore();
@@ -483,7 +508,7 @@ function clockUpdate(){const WK=WORLD/M/1000;
   if(!rlBuilt){rlBuilt=1;const L=document.getElementById('rList');for(const q of PL){const d=document.createElement('div'),b=document.createElement('b'),s=document.createElement('span');b.textContent=q.n;d.append(b,s);L.appendChild(d);RLI.push({q,d,s,km:(((q.s+q.e)/2)%WK+WK)%WK})}}
   const km=kmOf(P.x),z=MN.on?null:zoneAt(km);
   document.getElementById('rNow').textContent=MN.on?fmtT(gmin()):fmtT(localMin(km));
-  document.getElementById('rZone').textContent=MN.on?'La Luna · hora de California':z.n;
+  document.getElementById('rZone').textContent=MN.on?'La Luna · hora de California':z.n;document.getElementById('rDay').textContent='Día de juego: '+DAYC;
   for(const r of RLI){r.s.textContent=fmtT(localMin(r.km));r.d.className=(!MN.on&&z&&r.q.n===z.n)?'cur':''}}
 setInterval(()=>{if(ph.classList.contains('open')){if(app==='astros')astrosUpdate();else if(app==='clock')clockUpdate()}},250);
 function tickClock(){const d=new Date(),h=fmtT(gmin());document.getElementById('psb').textContent=h;document.getElementById('pclk').textContent=h;document.getElementById('pdt').textContent=d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})}
@@ -577,7 +602,7 @@ function fxStep(dt){
 }
 const shW=d=>{for(const a of[FX,DB,CR,RG,SW])for(const p of a)p.x+=d};
 
-function update(dt){PN.step(dt);
+function update(dt){PN.step(dt);trStep(dt);
   aimStep(dt);dgStep(dt);moonStep();MN.bk+=((MN.on?1:0)-MN.bk)*(1-Math.exp(-.8*dt)); // el cielo se oscurece/aclara poco a poco al entrar/salir de la Luna
  punchStep(dt);
   const KO=P.ko>0||BN.on;let{ix,iy}=KO?{ix:0,iy:0}:axis();const space=!KO&&(k.Space||P.cm>0),boost=k.ShiftLeft||k.ShiftRight;let m=Math.hypot(ix,iy);
@@ -590,14 +615,14 @@ function update(dt){PN.step(dt);
   if(P.flying&&DG.F>.03&&m>.05){const T=performance.now()/1000,w=(Math.sin(T*9.1)*.6+Math.sin(T*17.3+1.3)*.4)*.55*Math.pow(DG.F,1.3),c=Math.cos(w),sn=Math.sin(w),a=ix*c-iy*sn,b=ix*sn+iy*c;ix=a;iy=b} // vuelo inestable con daño
   if(P.flying){
     let s=Math.hypot(P.vx,P.vy),th=s>1?Math.atan2(P.vy,P.vx):P.aim;
-    P.jg=Math.max(0,P.jg-dt);const MX=WT&&P.y>0?VUW:MAXV;
+    P.jg=Math.max(0,P.jg-dt);const MX=WT&&P.y>0?VUW:MAXV*(1+TR.p);
     const jh=(k.KeyJ||P.jg>0)&&(m>.05||s>1);P.jt=jh?P.jt+dt*(1-.7*DG.F):0; // con daño tarda más en subir la aceleración
     const atm=MN.on?0:clamp(1-(-P.y/M-60000)/40000,0,1);
     if(atm<.02){ // ESPACIO: sin fricción, la velocidad se conserva; para frenar hay que empujar en sentido contrario
       if(m>.05)P.aim=lerpAng(P.aim,Math.atan2(iy,ix),1-Math.exp(-14*dt));
       if(P.kick>0){P.vx+=Math.cos(P.aim)*P.kick;P.vy+=Math.sin(P.aim)*P.kick;P.kick=0}
       if(m>.05||jh){const d=m>.05?Math.atan2(iy,ix):(s>1?th:P.aim),acc=300*M+(jh?Math.min(JSP,J0*Math.exp(P.jt/JTAU)):0);P.vx+=Math.cos(d)*acc*dt;P.vy+=Math.sin(d)*acc*dt}
-      s=Math.hypot(P.vx,P.vy);if(s>MSPACE){P.vx*=MSPACE/s;P.vy*=MSPACE/s;s=MSPACE}
+      s=Math.hypot(P.vx,P.vy);{const MS=MSPACE*(1+TR.p);if(s>MS){P.vx*=MS/s;P.vy*=MS/s;s=MS}}
       P.cruise=Math.min(MX,s);
     }else{
     if(P.kick>0){s=Math.min(MX,s+P.kick);P.cruise=Math.min(MX,Math.max(P.cruise||0,s));P.kick=0}
@@ -1223,7 +1248,7 @@ function kjTop(){ctx.setTransform(dpr,0,0,dpr,0,0);ctx.font='bold 14px monospace
 
 // ---------- MUNDO REALISTA: civiles ----------
 let REAL=false,STARTED=false;
-const begin=r=>{REAL=r;STARTED=true;document.getElementById('menu').style.display='none';try{ac()}catch(e){}};
+const begin=r=>{REAL=r;STARTED=true;document.getElementById('menu').style.display='none';try{ac()}catch(e){}if(WELCOME)setTimeout(()=>bsMsg(WELCOME),300)};
 document.getElementById('mYes').onclick=()=>begin(true);document.getElementById('mNo').onclick=()=>begin(false);
 // Estilo de vestir por bioma. Las ciudades tienen toda la variedad (peinados raros, colores vivos); fuera de ellas se limita a lo típico del lugar.
 const STY={playa:{jk:.1,sho:.55,robe:0,hat:{none:6,cap:2,sun:2},boot:.02,sand:.5,bare:.2,pal:'v'},frio:{jk:.85,sho:.04,robe:0,hat:{none:5,beanie:4,cap:1},boot:.5,sand:0,bare:0,pal:'d'},desierto:{jk:.2,sho:.3,robe:0,hat:{none:4,cowboy:3,sun:2,cap:1},boot:.4,sand:.1,bare:0,pal:'e'},arabe:{jk:.12,sho:0,robe:.6,hat:{none:3,kef:4},boot:0,sand:.6,bare:.02,pal:'l'},india:{jk:.05,sho:.1,robe:.5,hat:{none:9,cap:1},boot:0,sand:.6,bare:.1,pal:'v'},euro:{jk:.65,sho:.1,robe:0,hat:{none:6,beanie:1,cap:1},boot:.3,sand:.02,bare:0,pal:'m'},urb:{jk:.4,sho:.3,robe:.04,hat:{none:6,cap:2,beanie:1,sun:1},boot:.25,sand:.2,bare:.02,pal:'v'}};
@@ -1335,13 +1360,13 @@ function drawPlayer(sx,fy,ps){
     if(i>0&&PU.pz){const q=PU.pz,a=PU.pd-P.ang,lx=Math.cos(a)*P.dir,ly=Math.sin(a),Q=Math.abs(q),r=q<0?-12:34;hx=lerp(hx,sX+lx*r,Q);hy=lerp(hy,sY+ly*r,Q)}
     if(BN.m>.01){const q=BN.m,r=11+20*BN.h+(i>0?0:-14);hx=lerp(hx,r,q);hy=lerp(hy,-37,q)} // acostado: los brazos empujan la barra hacia arriba (para el cuerpo, 'adelante' = arriba)
     let mx=(sX+hx)/2,my=(sY+hy)/2;if(BN.m>.01){const e=ik(sX,sY,hx,hy,13,1);mx=lerp(mx,e[0],BN.m);my=lerp(my,e[1],BN.m)}if(RS.w>.01){const e=ik(sX,sY,hx,hy,13,1);mx=lerp(mx,e[0],RS.w);my=lerp(my,e[1],RS.w)}
-    L(sX,sY,mx,my,5,bk?'#22272b':'#2c3236');L(mx,my,hx,hy,5,bk?'#cdb64a':'#fbe15a');
+    L(sX,sY,mx,my,5*(1+.6*TR.p),bk?'#22272b':'#2c3236');L(mx,my,hx,hy,5*(1+.6*TR.p),bk?'#cdb64a':'#fbe15a');
     ctx.fillStyle=bk?'#c99a7c':'#e8b090';ctx.beginPath();ctx.arc(hx,hy,lerp(2.4,i>0?3.6:2.4,h),0,7);ctx.fill();
     ctx.fillStyle=bk?'#33809f':'#3f98bd';ctx.beginPath();ctx.arc(sX,sY,4.8,0,7);ctx.fill();
   };
   const ub=f=>{ctx.save();ctx.translate(0,py);ctx.rotate(lam);ctx.translate(0,24);f();ctx.restore()};
   leg(-1);leg(1);arm(-1);
-  ub(()=>{L(0,-24,0,-40,13,'#2c3236');L(0,-30,0,-40,6,'#fbe15a')});
+  ub(()=>{L(0,-24,0,-40,13*(1+.22*TR.p),'#2c3236');L(0,-30,0,-40,6*(1+.7*TR.p),'#fbe15a')});
   arm(1);
   ub(()=>{
     ctx.fillStyle='#fbe15a';ctx.beginPath();ctx.arc(-1,-47.5,7,0,7);ctx.fill();
@@ -1438,7 +1463,7 @@ function draw(){
   if(P.boom>0){ctx.strokeStyle=`rgba(255,255,255,${P.boom})`;ctx.lineWidth=4;ctx.beginPath();ctx.arc(P.sx,P.sy,(.7-P.boom)*1200,0,7);ctx.stroke()}
   let nb=0;for(const ch of chunks.values())nb+=ch.bs.length;
   const alt=Math.max(0,-P.y/M),gv=1-sstep(alt,100000,150000),fa=alt>=10000?(alt/1000).toFixed(1)+' km':(alt|0)+' m',cs=Math.cos(P.ang),post=cs<-.7?'picada':cs>.7?'vertical':'acostado',v=sp/M;
-  hud.textContent=`${REAL&&!MN.on?'rencor en la zona: '+((hateOf(zoneAt(kmOf(P.x)).n)*100)|0)+'% · civiles afectados: '+AFF+'\n':''}estado: ${P.flying?'VUELO':P.grounded?(P.stun>0?'aturdido':'suelo'):alt>100000?'espacio (flotando)':'caída · '+post}\naltura: ${P.y>0?'-'+(P.y/M|0)+' m (bajo el agua)':fa}\ngravedad: ${(gv*100)|0}%\nvel: ${v>=2000?(v/1000).toFixed(2)+' km/s':(v|0)+' m/s'}${alt<100000?`  Mach ${mach.toFixed(2)}${mach>=1?'  ¡SUPERSÓNICO!':''}`:''}`;
+  hud.textContent=`${TR.p>.0005?'💪 entrenado '+(TR.p*100).toFixed(1)+'%':'💪 sin entrenar'} · día ${DAYC}\n${REAL&&!MN.on?'rencor en la zona: '+((hateOf(zoneAt(kmOf(P.x)).n)*100)|0)+'% · civiles afectados: '+AFF+'\n':''}estado: ${P.flying?'VUELO':P.grounded?(P.stun>0?'aturdido':'suelo'):alt>100000?'espacio (flotando)':'caída · '+post}\naltura: ${P.y>0?'-'+(P.y/M|0)+' m (bajo el agua)':fa}\ngravedad: ${(gv*100)|0}%\nvel: ${v>=2000?(v/1000).toFixed(2)+' km/s':(v|0)+' m/s'}${alt<100000?`  Mach ${mach.toFixed(2)}${mach>=1?'  ¡SUPERSÓNICO!':''}`:''}`;
   if(PN.on)PN.hud();const la=PN.on?0:clamp(1-altM/12000,0,1);if(env.s>.5&&la>0&&Math.random()<.012)lf=.6;if(lf>.01){ctx.fillStyle=`rgba(255,255,255,${lf*.4*la})`;ctx.fillRect(0,0,W,H);lf*=.85}
   if(P.flash>.01){ctx.fillStyle=`rgba(255,240,210,${Math.min(1,P.flash)})`;ctx.fillRect(0,0,W,H)}
   punchUI();aimUI();dgUI();cam.x=ox;cam.y=oy;
@@ -1566,7 +1591,7 @@ S.talk=()=>{if(S.near==='bench'&&S.on&&!DL.on&&P.ko<=0&&P.grounded&&!BN.on){S.up
 S.out=()=>{S.on=false;S.t=0;MN.on=false;BN.on=0};
 // ---- sala de press de banca ----
 S.mount=()=>{BN.on=1;BN.c=0;BN.a=0;BN.ph=0;BN.top=false;Object.assign(P,{x:PX+BX*M,y:BTOP*M-yb(-1.5)+.01,vx:0,vy:0,dir:1,ang:-1.5,av:0,flying:false,hold:0,cruise:0,cm:0,jt:0,jg:0,grounded:true});PU.chg=-1;PU.t=0;P.flash=Math.max(P.flash,.2)};
-S.dismount=()=>{BN.on=0;Object.assign(P,{x:PX+(BX+3.3)*M,y:VF*M,vx:0,vy:0,dir:-1,grounded:true});P.flash=Math.max(P.flash,.1)};
+S.dismount=()=>{trSetEnd();BN.on=0;Object.assign(P,{x:PX+(BX+3.3)*M,y:VF*M,vx:0,vy:0,dir:-1,grounded:true});P.flash=Math.max(P.flash,.1)};
 S.bar=h=>{const a=-1.5,lx=11+20*h,ly=-37,sx=1.15*lx,sy=1.15*ly+32,c=Math.cos(a),sn=Math.sin(a),px=PX+BX*M,py=BTOP*M-yb(a)+.01;return[(sx*c-sy*sn+px-PX)/M,(sx*sn+sy*c+py-32)/M]}; // la mano frontal de Invincible acostado = la barra (en metros)
 const PG=(pts,col)=>{ctx.fillStyle=col;ctx.beginPath();pts.forEach((q,i)=>ctx[i?'lineTo':'moveTo'](q[0],q[1]));ctx.closePath();ctx.fill()};
 S.mach=tm=>{const[bx,by]=S.bar(BN.h),GO='#d4a82a',GOD='#8f7414',ay=VF-AH,yTop=ay+1.5,yB=by-2.2,yM=by-17,w0=9,w1=27,BB=9,
@@ -1645,6 +1670,26 @@ S.int=()=>{const z=cam.z,dx=wd(PX-cam.x),tm=S.tm;ctx.save();ctx.globalAlpha=Math
  ctx.textAlign='start';ctx.restore()};
 return S})();
 
-newSeed('prime');
+// ---------- GUARDADO (localStorage) ----------
+// Se guarda cada 15 s, al pulsar Enter y al cerrar/ocultar la pestaña: ubicación, hora de juego, día, entrenamiento y la hora real del ordenador.
+// Si vuelves ≥ 5 h reales después cuenta otro día de juego y apareces a las 6:00 AM; si no, sigues en la misma hora donde lo dejaste.
+const SAVE_KEY='invincible_save',AWAY_MS=5*3600000,SV={x:null};
+function saveGame(msg){if(!STARTED)return;if(!MN.on)SV.x=P.x;if(SV.x==null)return;
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,x:SV.x,t:Date.now(),abs:480+performance.now()/1000+TOFF,day:DAYC,lv:BN.lv,tr:{p:TR.p,ft:TR.ft,hurt:TR.hurt,dg:TR.dg,sets:TR.sets}}));if(msg)bsMsg('💾 Guardado · día '+DAYC)}catch(e){}}
+function loadGame(){let o=null;try{o=JSON.parse(localStorage.getItem(SAVE_KEY)||'null')}catch(e){}
+  if(!o||typeof o.x!=='number'||!isFinite(o.x))return;
+  const now=Date.now(),away=Math.max(0,now-(+o.t||now)),nd=away>=AWAY_MS,T=o.tr||{};
+  DAYC=Math.max(1,o.day|0);TR.p=clamp(+T.p||0,0,1);TR.hurt=+T.hurt||0;TR.dg=+T.dg||0;TR.sets=T.sets|0;TR.ft=Math.max(0,(+T.ft||0)-away/1000/TR_REC); // la fatiga también se recupera mientras estás fuera
+  BN.lv=Math.max(0,o.lv|0);BN.ton=BN_TON+BN_STEP*BN.lv;
+  let tgt=isFinite(+o.abs)?+o.abs:480;
+  if(nd){DAYC++;TR.dg=0;tgt=(Math.floor(tgt/1440)+1)*1440+360}
+  TOFF=tgt-480-performance.now()/1000;
+  const x=((o.x+HW)%WORLD+WORLD)%WORLD-HW,w=zoneAt(kmOf(x)).w;
+  Object.assign(P,{x,y:w?-3*M:0,vx:0,vy:0,grounded:!w,flying:false,hold:0,cruise:0});SV.x=x;cam.x=x;cam.y=P.y-40;actKey='';chunks.clear();syncChunks();trShape();
+  WELCOME=nd?`☀ Día ${DAYC} · 06:00 · nuevo día de juego`:`Día ${DAYC} · continúas donde lo dejaste`}
+setInterval(()=>saveGame(),15000);
+addEventListener('keydown',e=>{if(e.code==='Enter'||e.code==='NumpadEnter')saveGame(true)});
+addEventListener('pagehide',()=>saveGame());document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame()});
+newSeed('prime');loadGame();
 requestAnimationFrame(loop);
 </script></body></html>
