@@ -27,7 +27,7 @@ canvas{position:fixed;left:0;top:0;transform-origin:50% 62%}
 .app[data-a=yt] b{background:#e62117;font-size:22px}.app .num{position:absolute;left:4px;top:-3px;font:700 9px/14px system-ui;color:#fff;background:rgba(255,255,255,.22);min-width:14px;height:14px;border-radius:7px;text-align:center;font-style:normal}
 #vYt{width:100%;flex:1;flex-direction:column;align-items:center;min-height:0}.scr:not([data-v=yt]) #vYt{display:flex;position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;height:100%} /* oculto pero vivo: la música sigue sonando */
 .yh{margin-top:20px;font-size:15px;font-weight:700;display:flex;gap:6px;align-items:center;flex:none}.yh b{background:#e62117;border-radius:5px;padding:0 5px;font-size:11px;line-height:16px}
-.yp{position:relative;width:calc(100% - 16px);aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;margin-top:8px;flex:none}.yp iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.ye{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;opacity:.7;padding:6px;pointer-events:none}
+.yp{position:relative;width:calc(100% - 16px);aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;margin-top:8px;flex:none}.yp iframe{position:absolute;left:0;top:0;width:220%;height:220%;border:0;transform:scale(.4545);transform-origin:0 0}.ye{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;opacity:.7;padding:6px;pointer-events:none}
 .yr{display:flex;gap:4px;width:calc(100% - 16px);margin-top:8px;flex:none}.yr input{flex:1;min-width:0;padding:5px 6px;border-radius:7px;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:11px;outline:0}.yr input::placeholder{color:#bbb}.yr button{border:0;border-radius:7px;background:#e62117;color:#fff;font-size:11px;padding:0 7px;cursor:pointer}.yr button:last-child{background:#3a3a3c}
 .yl{width:calc(100% - 16px);flex:1;min-height:0;overflow-y:auto;margin-top:6px}.yl div{display:flex;align-items:center;gap:4px;font-size:10px;padding:4px 2px;border-bottom:1px solid rgba(255,255,255,.1);cursor:pointer}.yl div span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.yl div i{font-style:normal;opacity:.55;padding:0 3px}
 .yn{width:calc(100% - 16px);font-size:9px;line-height:1.3;opacity:.6;padding:3px 0 4px;flex:none}
@@ -55,7 +55,7 @@ canvas{position:fixed;left:0;top:0;transform-origin:50% 62%}
 @keyframes rg{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px) rotate(-3deg)}75%{transform:translateX(3px) rotate(3deg)}}
 .nl{width:100%;flex:1;min-height:0;overflow-y:auto;padding:8px 8px 4px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px}.nl .pc{margin:auto 0;text-align:center}
 .nt{background:rgba(255,255,255,.1);border-left:3px solid #ff3b30;border-radius:8px;padding:6px 8px;font-size:10px;line-height:1.35;text-align:left}.nt.ok{border-left-color:#34c759}.nt.gn{border-left-color:#8e8e93}.nt.gd{border-left-color:#0a84ff}
-.nt b{display:block;font-size:11px}.nt span{display:block;opacity:.9}.nt small{display:block;opacity:.75;font-size:9.5px}.nt em{display:block;opacity:.5;font-style:normal;font-size:9px;text-align:right}
+.nt{position:relative}.nt b{display:block;font-size:11px;padding-right:16px}.nx{position:absolute;top:3px;right:4px;cursor:pointer;opacity:.65;font-style:normal;font-size:11px;padding:1px 4px;border-radius:5px}.nx:hover{opacity:1;background:rgba(255,255,255,.2)}.nt span{display:block;opacity:.9}.nt small{display:block;opacity:.75;font-size:9.5px}.nt em{display:block;opacity:.5;font-style:normal;font-size:9px;text-align:right}
 #kb{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);width:min(420px,44vw);display:none;color:#fff;font:700 13px monospace;text-align:center;z-index:4;pointer-events:none;text-shadow:0 1px 4px #000}
 #kb .bar{height:14px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.5);border-radius:7px;overflow:hidden;margin:4px 0 2px}#kbf{display:block;height:100%;background:linear-gradient(#ff5a4a,#b3201a);width:100%}
 @media (max-height:560px){.phone.open{width:170px;height:340px}.phone.open .clk{font-size:36px;margin-top:36px}}
@@ -74,7 +74,7 @@ canvas{position:fixed;left:0;top:0;transform-origin:50% 62%}
 </div><div class="home" id="phome"></div></div>
 <div id="pcb"><div class="bar"><i id="pcf"></i></div><span id="pcl"></span></div><div id="pf"></div><div id="aimh"></div><div id="cmh">✈ MODO CRUCERO · Q = desactivar</div><canvas id="bodyhud"></canvas><div id="ko"></div>
 <div id="kb"><div id="kbn"></div><div class="bar"><i id="kbf"></i></div><div id="kbt"></div></div>
-<div id="menu"><label class="hsw"><span>Mostrar controles e info</span><input type="checkbox" id="hswc" checked><i></i></label><div><h1>¿Activar Mundo Realista?</h1><p>SÍ añade civiles y mecánicas extra que se irán sumando. NO inicia el mundo normal.</p><div class="mb"><button id="mYes">SÍ</button><button id="mNo">NO</button></div></div></div>
+<div id="menu"><button id="mReset" style="position:absolute;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));padding:8px 14px;border:2px solid #ff5a4a;background:transparent;color:#ff5a4a;font:700 13px monospace;border-radius:8px;cursor:pointer">RESET ALL</button><label class="hsw"><span>Mostrar controles e info</span><input type="checkbox" id="hswc" checked><i></i></label><div><h1>¿Activar Mundo Realista?</h1><p>SÍ añade civiles y mecánicas extra que se irán sumando. NO inicia el mundo normal.</p><div class="mb"><button id="mYes">SÍ</button><button id="mNo">NO</button></div></div></div>
 <div class="help">A/D caminar · Shift correr / cámara normal en vuelo · SPACE salta · mantener SPACE en el aire = volar (WASD) · mantener J = acelerar cada vez más rápido hacia donde apuntes (hasta Mach 25) · J J (doble toque rápido) = impulso inmediato · Ñ = golpear (mantén para cargar hasta 3 s) · Q (volando) = modo crucero: no hace falta mantener SPACE, Q otra vez lo quita · E = celular (abre / botón de inicio / cierra) · con el celular en el menú, pulsa el número de la app para entrar · L = HELP AIM: 1ª vez AIM SEARCH (el golpe que conecte fija al enemigo), con enemigo fijado vuelas hacia él al mantener SPACE (J acelera, WASD desvía un poco) y al golpear tienes 0.3 s de coyote antes/después del contacto; L otra vez = soltar · K = frenar (a velocidades absurdas hay que repetirlo; en atmósfera suelta una onda de choque) · volando a más de 100 m/s basta mantener SPACE para conservar la velocidad · el cuerpo mira hacia donde apuntas, no hacia donde te mueves · soltar SPACE = caer (en caída: A/D girar · W picada · S acostado) · sin límite de altura: pasando ~100 km no hay gravedad ni aire · Ave María ya no se invoca con L: en el Pentágono (planta baja) pulsa W frente a Cecil para hablar con él · W frente al teletransportador = viajar (solo con permiso de Cecil, 1 vez por día de juego) · en diálogos: W/S elegir, ESPACIO aceptar/pasar</div>
 
 <script>
@@ -358,11 +358,11 @@ const TR_G=.0047,    // progreso por repetición perfecta con el cuerpo descansa
   TR_SETGAP=25,      // segundos sin repetir = la serie terminó
   TR_DAYCAP=5/30,    // progreso máximo por día de juego (≈ 5 series grandes)
   TR_HURT=300000;    // ms reales: herido hace menos de esto = no progresa
-let DAYC=1;          // contador de días de juego (sube si vuelves ≥ 5 h después)
+let DAYB=0;const absG=()=>480+performance.now()/1000+TOFF,dayG=()=>DAYB+Math.floor(absG()/1440)+1,GAME0=Date.UTC(2003,1,13),gameDate=()=>new Date(GAME0+(dayG()-1)*864e5).toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});          // contador de días de juego (sube si vuelves ≥ 5 h después)
 const BPT=BP.map(b=>b.t),trHurt=()=>Date.now()-TR.hurt<TR_HURT,trInj=()=>DG.D>.02||DG.aP>.03||DG.aB>.01||DG.wo.length>0;
 function trShape(){const p=TR.p;for(let i=0;i<BP.length;i++){const b=BP[i];if(!b.t)continue;b.t=BPT[i]*(i===1?1+.1*p:(i>=2&&i<=5)?1+.7*p:1)}} // brazos más gruesos, abdomen casi igual
 function trChest(g,col){if(TR.p<.002)return;g.fillStyle=col;g.beginPath();g.ellipse(50,36,11+13*TR.p,10+3*TR.p,0,0,7);g.fill()} // el pecho crece mucho más que el abdomen
-function trStep(dt){const n=Date.now(),d=Math.min(5,Math.max(0,(n-TR.tn)/1000));TR.tn=n;TR.ft=Math.max(0,TR.ft-d/TR_REC);DEF=.78*(1-.5*TR.p);
+let TRD=-1;function trStep(dt){{const dg=dayG();if(TRD<0)TRD=dg;else if(dg!==TRD){TRD=dg;TR.dg=0}}const n=Date.now(),d=Math.min(5,Math.max(0,(n-TR.tn)/1000));TR.tn=n;TR.ft=Math.max(0,TR.ft-d/TR_REC);DEF=.78*(1-.5*TR.p);
   if(TR.sr>0){TR.gap+=d;if(TR.gap>TR_SETGAP)trSetEnd()}}
 function trSetEnd(){if(TR.sr>=3)TR.sets++;TR.sr=0;TR.gap=0}
 function trFail(){TR.ft=Math.min(1,TR.ft+TR_FT*.5);TR.gap=0}
@@ -457,6 +457,14 @@ ph.querySelectorAll('.app').forEach((a,i)=>{const n=document.createElement('i');
 // YouTube no deja incrustar su buscador, así que: pega un link (video o lista) o usa 🔎 para buscar en una pestaña, copia el link y pégalo aquí. Los anuncios salen como en YouTube.
 const ytF=document.getElementById('ytF'),ytIn=document.getElementById('ytIn'),ytE=document.getElementById('ytE'),ytL=document.getElementById('ytL'),ytN=document.getElementById('ytN');let YTH=[],ytNT=0;try{YTH=JSON.parse(localStorage.getItem('invincible_yt')||'[]')}catch(e){}
 const ytSave=()=>{try{localStorage.setItem('invincible_yt',JSON.stringify(YTH))}catch(e){}},ytTip=t=>{ytN.textContent=t;clearTimeout(ytNT);if(t!==YT_DEF)ytNT=setTimeout(()=>ytTip(YT_DEF),4000)},YT_DEF='Clic fuera del reproductor (o Esc) = volver al juego. ¿Error 153? abre el juego desde una web, no desde un archivo.';
+let ytLV=-1,ytLT=0,ytUV=100,ytSent=0,ytLoad=0;const ytCmd=o=>{try{ytF.contentWindow.postMessage(JSON.stringify(o),'*')}catch(e){}};
+ytF.addEventListener('load',()=>{ytLV=-1;ytLoad=performance.now();ytCmd({event:'listening',id:1,channel:'widget'})});
+// el volumen del juego va aparte del de YouTube: se escucha el volumen que pones tú y el juego solo lo multiplica por el aire (en el vacío es 0 y no se puede subir)
+addEventListener('message',e=>{if(!ytF.contentWindow||e.source!==ytF.contentWindow)return;let d=e.data;if(typeof d==='string'){try{d=JSON.parse(d)}catch(_){return}}
+  if(!d||d.event!=='infoDelivery'||!d.info||typeof d.info.volume!=='number')return;const f=airK(Math.max(0,-P.y/M));
+  if(performance.now()-ytSent>800&&ytLV>=0&&Math.abs(d.info.volume-ytLV)>2&&f>.05)ytUV=clamp(Math.round(d.info.volume/f),0,100)});
+function ytVol(){const n=performance.now();if(n-ytLT<250||!ytF.src)return;ytLT=n;const v=Math.round(ytUV*airK(Math.max(0,-P.y/M)));
+  if(v===ytLV&&!(n-ytLoad<10000&&n-(ytVol.f||0)>1000))return;ytLV=v;ytVol.f=n;ytSent=n;ytCmd({event:'command',func:'setVolume',args:[v]})}
 function ytBlur(){document.getElementById('ytIn').blur()}
 function ytParse(s){s=s.trim();if(!s)return null;let v=null,l=null;
   try{const u=new URL(/^https?:\/\//i.test(s)?s:'https://'+s),h=u.hostname.replace(/^www\.|^m\.|^music\./,'');
@@ -466,7 +474,7 @@ function ytParse(s){s=s.trim();if(!s)return null;let v=null,l=null;
   if(v&&!/^[\w-]{11}$/.test(v))v=null;
   if(!v&&!l){if(/^[\w-]{11}$/.test(s))v=s;else if(/^(PL|OL|UU|FL|RD)[\w-]{10,}$/.test(s))l=s}
   return v||l?{v,l}:null}
-const ytSrc=p=>{const q='autoplay=1&playsinline=1&rel=0';return p.l&&!p.v?`https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(p.l)}&${q}`:`https://www.youtube.com/embed/${p.v}?${p.l?'list='+encodeURIComponent(p.l)+'&':''}${q}`};
+const ytSrc=p=>{const q='autoplay=1&playsinline=1&rel=0&enablejsapi=1';return p.l&&!p.v?`https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(p.l)}&${q}`:`https://www.youtube.com/embed/${p.v}?${p.l?'list='+encodeURIComponent(p.l)+'&':''}${q}`};
 function ytTitle(e){const u='https://www.youtube.com/'+(e.v?'watch?v='+e.v:'playlist?list='+e.l);fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent(u)).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.title){e.t=j.title;ytSave();ytList()}}).catch(()=>{})}
 function ytAdd(p,t){const key=(p.v||'')+'|'+(p.l||'');let e=YTH.find(x=>x.k===key);
   if(e)YTH.splice(YTH.indexOf(e),1);else{e={k:key,v:p.v,l:p.l,t:t||(p.v?'Video '+p.v:'Lista '+p.l)};if(!t)ytTitle(e)}
@@ -508,10 +516,10 @@ function clockUpdate(){const WK=WORLD/M/1000;
   if(!rlBuilt){rlBuilt=1;const L=document.getElementById('rList');for(const q of PL){const d=document.createElement('div'),b=document.createElement('b'),s=document.createElement('span');b.textContent=q.n;d.append(b,s);L.appendChild(d);RLI.push({q,d,s,km:(((q.s+q.e)/2)%WK+WK)%WK})}}
   const km=kmOf(P.x),z=MN.on?null:zoneAt(km);
   document.getElementById('rNow').textContent=MN.on?fmtT(gmin()):fmtT(localMin(km));
-  document.getElementById('rZone').textContent=MN.on?'La Luna · hora de California':z.n;document.getElementById('rDay').textContent='Día de juego: '+DAYC;
+  document.getElementById('rZone').textContent=MN.on?'La Luna · hora de California':z.n;document.getElementById('rDay').textContent='Día de juego: '+dayG();
   for(const r of RLI){r.s.textContent=fmtT(localMin(r.km));r.d.className=(!MN.on&&z&&r.q.n===z.n)?'cur':''}}
 setInterval(()=>{if(ph.classList.contains('open')){if(app==='astros')astrosUpdate();else if(app==='clock')clockUpdate()}},250);
-function tickClock(){const d=new Date(),h=fmtT(gmin());document.getElementById('psb').textContent=h;document.getElementById('pclk').textContent=h;document.getElementById('pdt').textContent=d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})}
+function tickClock(){const d=new Date(),h=fmtT(gmin());document.getElementById('psb').textContent=h;document.getElementById('pclk').textContent=h;document.getElementById('pdt').textContent=gameDate()}
 tickClock();setInterval(tickClock,250);
 // Luna: distancia y dirección (la usa la app MisAstros del celular; funciona desde cualquier lugar, también desde la Tierra)
 function moonCalc(){const t=performance.now()/1000,om=2*Math.PI/MT;let cx=(((-(480+t))%1440+1440)%1440)/1440*WKM*1000*M;cx+=Math.round((P.x-cx)/WORLD)*WORLD;
@@ -549,7 +557,7 @@ const sstep=(v,a,b)=>{const t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t)},wrap=a=
 const yb=a=>{const c=Math.cos(a);return Math.max(-32+32*c,-32-35*c)+8*Math.abs(Math.sin(a))};
 const KN=G/(55*M)**2,KT=G/(85*M)**2; // acostado: v.terminal 55 m/s · en picada/derecho: 85 m/s
 let AC;const ac=()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){}};
-function thump(v){if(!AC)return;const n=Math.min(1,v/150),d=.4+n*1.6,t=AC.currentTime,len=AC.sampleRate*d|0,buf=AC.createBuffer(1,len,AC.sampleRate),ch=buf.getChannelData(0);
+function thump(v){if(!AC||MN.on)return;const n=Math.min(1,v/150),d=.4+n*1.6,t=AC.currentTime,len=AC.sampleRate*d|0,buf=AC.createBuffer(1,len,AC.sampleRate),ch=buf.getChannelData(0);
   for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
   const s=AC.createBufferSource(),f=AC.createBiquadFilter(),o=AC.createOscillator(),g=AC.createGain();s.buffer=buf;f.type='lowpass';f.frequency.value=200+n*500;
   o.frequency.setValueAtTime(90,t);o.frequency.exponentialRampToValueAtTime(25,t+d);g.gain.value=.15+.6*n;
@@ -691,7 +699,7 @@ function update(dt){PN.step(dt);trStep(dt);
   else if(!air){P.av=0;P.ang=lerpAng(P.ang,BN.on?-1.5*P.dir:P.ko>0?P.dir*1.5:P.hp>.05?0:Math.sign(P.vx)*.14*Math.min(1,Math.abs(P.vx)/(8*M)),1-Math.exp(-10*dt))}
   P.fp+=((P.flying?clamp((sp-8*M)/(14*M),0,1):0)-P.fp)*(1-Math.exp(-10*dt));
   P.ap+=((air?1:0)-P.ap)*(1-Math.exp(-12*dt));
-  if(mach>=1&&P.pm<1&&-P.y/M<90000){P.boom=.7;sonic(-P.y/M)}P.pm=mach;P.boom=Math.max(0,P.boom-dt);
+  if(mach>=1&&P.pm<1&&!MN.on&&-P.y/M<90000){P.boom=.7;sonic(-P.y/M)}P.pm=mach;P.boom=Math.max(0,P.boom-dt);
   P.pw=P.flying?1.2:Math.max(0,P.pw-dt);if(P.stun<=.35)P.hz=0;
   P.hp+=((P.hz?1:0)-P.hp)*(1-Math.exp(-(P.hz?30:5)*dt));P.cr*=Math.exp(-(P.stun>0?1.2:6)*dt);
   P.sink*=Math.exp(-(P.stun>.35?.5:5)*dt);if(P.grounded&&WT&&GY<M)P.sink=Math.max(P.sink,1.4*M);P.shake*=Math.exp(-5*dt);P.flash*=Math.exp(-4*dt);
@@ -716,7 +724,7 @@ function update(dt){PN.step(dt);trStep(dt);
   cam.x+=(lerp(P.x+lx,kmx,kf)-cam.x)*cr;cam.y+=(lerp(P.y-40+ly,kmy,kf)-cam.y)*cr;
   const mx=lerp(W*.3,W*.46,kf)/cam.z,my=lerp(H*.28,H*.42,kf)/cam.z;
   cam.x=clamp(cam.x,P.x-mx,P.x+mx);cam.y=clamp(cam.y,P.y-32-my,P.y-32+my);
-  audio(sp/M,mach,Math.max(0,-P.y/M));envStep(dt,MN.on?MZ:zoneAt(kmOf(P.x)));if(MN.on)moonChunks();else syncChunks();
+  audio(sp/M,mach,Math.max(0,-P.y/M));ytVol();envStep(dt,MN.on?MZ:zoneAt(kmOf(P.x)));if(MN.on)moonChunks();else syncChunks();
 }
 // ---------- Render ----------
 const stars=Array.from({length:140},()=>[Math.random(),Math.random(),Math.random()*1.6+.4]);
@@ -823,16 +831,17 @@ const kjNear=wx=>MN.on?0:airK(Math.max(0,-P.y/M))*(WT&&P.y>0?.5:1)*clamp(1-Math.
 function kjDist(px,py,a,b,c,d){const vx=c-a,vy=d-b,l=vx*vx+vy*vy,t=l?clamp(((px-a)*vx+(py-b)*vy)/l,0,1):0;return Math.hypot(px-a-vx*t,py-b-vy*t)}
 function updBadge(){const t=UN>9?'9+':UN;for(const id of['bdg','abd']){const e=document.getElementById(id);e.textContent=t;e.style.display=UN?'flex':'none'}}
 function notesRender(){const el=document.getElementById('nl');let h='';
-  for(const n of NOTES){const K=n.K,t=n.kind,km=kmOf(K.x).toLocaleString('en-US',{maximumFractionDigits:0});let ttl,cl='',l3;
+  for(let ix=0;ix<NOTES.length;ix++){const n=NOTES[ix],K=n.K,t=n.kind,km=kmOf(K.x).toLocaleString('en-US',{maximumFractionDigits:0});let ttl,cl='',l3;
     if(t==='alert'){ttl='⚠️ ALERTA: Kaiju en '+K.q.n+(K.hate?' 😡':'');const rel=wd(K.x-P.x)/M/1000;
       l3=`km ${km} · `+(MN.on?'fuera de alcance':fd(Math.abs(rel))+(rel>0?' ▶ derecha':' ◀ izquierda'))+`<br>${kjSt(K)} · ❤ ${Math.ceil(K.hp/K.mhp*100)}% · ${kjCnt(K)}`}
     else{if(t==='dead'){ttl='✅ Kaiju derrotado';cl=' ok'}else if(t==='guard'){ttl='🛡️ Los Guardianes del Globo se encargaron';cl=' gd'}else{ttl='🌊 El kaiju se sumergió';cl=' gn'}l3=`${K.q.n} · km ${km} · ${kjCnt(K)}`}
-    h+=`<div class="nt${cl}"><b>${ttl}</b><span>${K.name} · ${K.Sm|0} m de alto${K.hate?' · 😡 ODIA A INVINCIBLE':''}</span><small>${l3}</small><em>${n.time} (hora California)</em></div>`}
+    h+=`<div class="nt${cl}">${t!=='alert'?`<i class="nx" data-i="${ix}">✕</i>`:''}<b>${ttl}</b><span>${K.name} · ${K.Sm|0} m de alto${K.hate?' · 😡 ODIA A INVINCIBLE':''}</span><small>${l3}</small><em>${n.time} (hora California)</em></div>`}
   if(!h)h='<div class="pc">No hay notificaciones</div>';if(h!==nrs){nrs=h;el.innerHTML=h}}
 setInterval(()=>{if(ph.classList.contains('open')&&app==='not')notesRender()},250);
-function kjNote(K,kind){NOTES.unshift({K,kind,time:fmtT(gmin())});if(NOTES.length>14)NOTES.pop();UN++;const open=ph.classList.contains('open');if(app==='not'&&open)UN=0;updBadge();
+document.getElementById('nl').onclick=e=>{const x=e.target.closest&&e.target.closest('.nx');if(!x)return;e.stopPropagation();NOTES.splice(+x.dataset.i,1);nrs='';notesRender()};
+function kjNote(K,kind){const ex=kind!=='alert'?NOTES.find(n=>n.K===K&&n.kind==='alert'):null;if(ex){ex.kind=kind;ex.time=fmtT(gmin());NOTES.splice(NOTES.indexOf(ex),1);NOTES.unshift(ex)}else{NOTES.unshift({K,kind,time:fmtT(gmin())});if(NOTES.length>14)NOTES.pop()}UN++;const open=ph.classList.contains('open');if(app==='not'&&open)UN=0;updBadge();
   if(!open){ph.classList.add('ring');setTimeout(()=>ph.classList.remove('ring'),4000)}
-  if(AC&&AC.state==='running'){const t=AC.currentTime;[0,.2].forEach((d,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=i?1040:780;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.12,t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+.25);o.connect(g);g.connect(AC.destination);o.start(t+d);o.stop(t+d+.3)})}
+  const av=airK(Math.max(0,-P.y/M));if(AC&&AC.state==='running'&&av>.02){const t=AC.currentTime;[0,.2].forEach((d,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=i?1040:780;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.12*av,t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+.25);o.connect(g);g.connect(AC.destination);o.start(t+d);o.stop(t+d+.3)})}
   notesRender()}
 function kjRoar(K){if(K.ty==='beast')return kjRoarB(K);const a=kjNear(K.wx);if(a<.03||!AC||AC.state!=='running')return;const t=AC.currentTime,d=1.6,o=AC.createOscillator(),o2=AC.createOscillator(),lf=AC.createOscillator(),lg=AC.createGain(),g=AC.createGain(),f=AC.createBiquadFilter();
   o.type='sawtooth';o2.type='square';o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(38,t+d);o2.frequency.setValueAtTime(55,t);o2.frequency.exponentialRampToValueAtTime(22,t+d);
@@ -1249,6 +1258,7 @@ function kjTop(){ctx.setTransform(dpr,0,0,dpr,0,0);ctx.font='bold 14px monospace
 // ---------- MUNDO REALISTA: civiles ----------
 let REAL=false,STARTED=false;
 const begin=r=>{REAL=r;STARTED=true;document.getElementById('menu').style.display='none';try{ac()}catch(e){}if(WELCOME)setTimeout(()=>bsMsg(WELCOME),300)};
+document.getElementById('mReset').onclick=()=>{if(!confirm('¿Borrar TODOS los datos guardados y volver a empezar?'))return;try{for(const q of Object.keys(localStorage))if(q.startsWith('invincible_')&&q!=='invincible_help')localStorage.removeItem(q)}catch(e){}MEM={};memD=false;STARTED=false;location.reload()};
 document.getElementById('mYes').onclick=()=>begin(true);document.getElementById('mNo').onclick=()=>begin(false);
 // Estilo de vestir por bioma. Las ciudades tienen toda la variedad (peinados raros, colores vivos); fuera de ellas se limita a lo típico del lugar.
 const STY={playa:{jk:.1,sho:.55,robe:0,hat:{none:6,cap:2,sun:2},boot:.02,sand:.5,bare:.2,pal:'v'},frio:{jk:.85,sho:.04,robe:0,hat:{none:5,beanie:4,cap:1},boot:.5,sand:0,bare:0,pal:'d'},desierto:{jk:.2,sho:.3,robe:0,hat:{none:4,cowboy:3,sun:2,cap:1},boot:.4,sand:.1,bare:0,pal:'e'},arabe:{jk:.12,sho:0,robe:.6,hat:{none:3,kef:4},boot:0,sand:.6,bare:.02,pal:'l'},india:{jk:.05,sho:.1,robe:.5,hat:{none:9,cap:1},boot:0,sand:.6,bare:.1,pal:'v'},euro:{jk:.65,sho:.1,robe:0,hat:{none:6,beanie:1,cap:1},boot:.3,sand:.02,bare:0,pal:'m'},urb:{jk:.4,sho:.3,robe:.04,hat:{none:6,cap:2,beanie:1,sun:1},boot:.25,sand:.2,bare:.02,pal:'v'}};
@@ -1463,7 +1473,7 @@ function draw(){
   if(P.boom>0){ctx.strokeStyle=`rgba(255,255,255,${P.boom})`;ctx.lineWidth=4;ctx.beginPath();ctx.arc(P.sx,P.sy,(.7-P.boom)*1200,0,7);ctx.stroke()}
   let nb=0;for(const ch of chunks.values())nb+=ch.bs.length;
   const alt=Math.max(0,-P.y/M),gv=1-sstep(alt,100000,150000),fa=alt>=10000?(alt/1000).toFixed(1)+' km':(alt|0)+' m',cs=Math.cos(P.ang),post=cs<-.7?'picada':cs>.7?'vertical':'acostado',v=sp/M;
-  hud.textContent=`${TR.p>.0005?'💪 entrenado '+(TR.p*100).toFixed(1)+'%':'💪 sin entrenar'} · día ${DAYC}\n${REAL&&!MN.on?'rencor en la zona: '+((hateOf(zoneAt(kmOf(P.x)).n)*100)|0)+'% · civiles afectados: '+AFF+'\n':''}estado: ${P.flying?'VUELO':P.grounded?(P.stun>0?'aturdido':'suelo'):alt>100000?'espacio (flotando)':'caída · '+post}\naltura: ${P.y>0?'-'+(P.y/M|0)+' m (bajo el agua)':fa}\ngravedad: ${(gv*100)|0}%\nvel: ${v>=2000?(v/1000).toFixed(2)+' km/s':(v|0)+' m/s'}${alt<100000?`  Mach ${mach.toFixed(2)}${mach>=1?'  ¡SUPERSÓNICO!':''}`:''}`;
+  hud.textContent=`${TR.p>.0005?'💪 entrenado '+(TR.p*100).toFixed(1)+'%':'💪 sin entrenar'} · día ${dayG()}\n${REAL&&!MN.on?'rencor en la zona: '+((hateOf(zoneAt(kmOf(P.x)).n)*100)|0)+'% · civiles afectados: '+AFF+'\n':''}estado: ${P.flying?'VUELO':P.grounded?(P.stun>0?'aturdido':'suelo'):alt>100000?'espacio (flotando)':'caída · '+post}\naltura: ${P.y>0?'-'+(P.y/M|0)+' m (bajo el agua)':fa}\ngravedad: ${(gv*100)|0}%\nvel: ${v>=2000?(v/1000).toFixed(2)+' km/s':(v|0)+' m/s'}${alt<100000&&!MN.on?`  Mach ${mach.toFixed(2)}${mach>=1?'  ¡SUPERSÓNICO!':''}`:''}`;
   if(PN.on)PN.hud();const la=PN.on?0:clamp(1-altM/12000,0,1);if(env.s>.5&&la>0&&Math.random()<.012)lf=.6;if(lf>.01){ctx.fillStyle=`rgba(255,255,255,${lf*.4*la})`;ctx.fillRect(0,0,W,H);lf*=.85}
   if(P.flash>.01){ctx.fillStyle=`rgba(255,240,210,${Math.min(1,P.flash)})`;ctx.fillRect(0,0,W,H)}
   punchUI();aimUI();dgUI();cam.x=ox;cam.y=oy;
@@ -1675,18 +1685,18 @@ return S})();
 // Si vuelves ≥ 5 h reales después cuenta otro día de juego y apareces a las 6:00 AM; si no, sigues en la misma hora donde lo dejaste.
 const SAVE_KEY='invincible_save',AWAY_MS=5*3600000,SV={x:null};
 function saveGame(msg){if(!STARTED)return;if(!MN.on)SV.x=P.x;if(SV.x==null)return;
-  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,x:SV.x,t:Date.now(),abs:480+performance.now()/1000+TOFF,day:DAYC,lv:BN.lv,tr:{p:TR.p,ft:TR.ft,hurt:TR.hurt,dg:TR.dg,sets:TR.sets}}));if(msg)bsMsg('💾 Guardado · día '+DAYC)}catch(e){}}
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,x:SV.x,t:Date.now(),abs:480+performance.now()/1000+TOFF,day:dayG(),lv:BN.lv,tr:{p:TR.p,ft:TR.ft,hurt:TR.hurt,dg:TR.dg,sets:TR.sets}}));if(msg)bsMsg('💾 Guardado · día '+dayG())}catch(e){}}
 function loadGame(){let o=null;try{o=JSON.parse(localStorage.getItem(SAVE_KEY)||'null')}catch(e){}
   if(!o||typeof o.x!=='number'||!isFinite(o.x))return;
   const now=Date.now(),away=Math.max(0,now-(+o.t||now)),nd=away>=AWAY_MS,T=o.tr||{};
-  DAYC=Math.max(1,o.day|0);TR.p=clamp(+T.p||0,0,1);TR.hurt=+T.hurt||0;TR.dg=+T.dg||0;TR.sets=T.sets|0;TR.ft=Math.max(0,(+T.ft||0)-away/1000/TR_REC); // la fatiga también se recupera mientras estás fuera
+  const dSv=Math.max(1,o.day|0);TR.p=clamp(+T.p||0,0,1);TR.hurt=+T.hurt||0;TR.dg=+T.dg||0;TR.sets=T.sets|0;TR.ft=Math.max(0,(+T.ft||0)-away/1000/TR_REC); // la fatiga también se recupera mientras estás fuera
   BN.lv=Math.max(0,o.lv|0);BN.ton=BN_TON+BN_STEP*BN.lv;
   let tgt=isFinite(+o.abs)?+o.abs:480;
-  if(nd){DAYC++;TR.dg=0;tgt=(Math.floor(tgt/1440)+1)*1440+360}
-  TOFF=tgt-480-performance.now()/1000;
+  let dd=dSv;if(nd){dd++;TR.dg=0;tgt=(Math.floor(tgt/1440)+1)*1440+360}
+  TOFF=tgt-480-performance.now()/1000;DAYB=dd-(Math.floor(tgt/1440)+1);
   const x=((o.x+HW)%WORLD+WORLD)%WORLD-HW,w=zoneAt(kmOf(x)).w;
   Object.assign(P,{x,y:w?-3*M:0,vx:0,vy:0,grounded:!w,flying:false,hold:0,cruise:0});SV.x=x;cam.x=x;cam.y=P.y-40;actKey='';chunks.clear();syncChunks();trShape();
-  WELCOME=nd?`☀ Día ${DAYC} · 06:00 · nuevo día de juego`:`Día ${DAYC} · continúas donde lo dejaste`}
+  WELCOME=nd?`☀ Día ${dayG()} · 06:00 · nuevo día de juego`:`Día ${dayG()} · continúas donde lo dejaste`}
 setInterval(()=>saveGame(),15000);
 addEventListener('keydown',e=>{if(e.code==='Enter'||e.code==='NumpadEnter')saveGame(true)});
 addEventListener('pagehide',()=>saveGame());document.addEventListener('visibilitychange',()=>{if(document.hidden)saveGame()});
